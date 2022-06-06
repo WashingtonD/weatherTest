@@ -16,12 +16,10 @@ struct ContentView: View {
     @State var city = "New York"
     @State var temp = 0
     @State var description = ""
-    @State var imgs = Data()
+    @State var humidity = 0
     @State var forecastDescr = "Clear"
     @State var getTemp = false
-    @State var presure = 0
     @State var feelsLike = 0
-    @State var weatherCode = 125
     @State var currentIcon = ""
     @State var date = ""
     @State var selectedTab = 1
@@ -47,6 +45,9 @@ struct ContentView: View {
                 Text("\(city)")
                     .font(.system(size: 40))
                     .foregroundColor(dayColor)
+                Text("\(date)")
+                    .font(.system(size: 30))
+                    .foregroundColor(dayColor)
                 Text("\(description)")
                     .foregroundColor(dayColor)
                     .font(.system(size: 30))
@@ -61,6 +62,9 @@ struct ContentView: View {
                 Text("Feels like: \(self.feelsLike)°")
                     .foregroundColor(dayColor)
                     .font(.system(size: 30))
+                Text("Humidity: \(self.humidity)%")
+                    .foregroundColor(dayColor)
+                    .font(.system(size: 30))
                 
         }
         }.tabItem{
@@ -71,6 +75,9 @@ struct ContentView: View {
             VStack{
                     Text("\(city)")
                         .font(.system(size: 40))
+                        .foregroundColor(dayColor)
+                    Text("\(date)")
+                        .font(.system(size: 30))
                         .foregroundColor(dayColor)
                     Text("\(description)")
                         .foregroundColor(dayColor)
@@ -86,6 +93,9 @@ struct ContentView: View {
                     Text("Feels like: \(self.feelsLike)°")
                         .foregroundColor(dayColor)
                         .font(.system(size: 30))
+                Text("Humidity: \(self.humidity)%")
+                    .foregroundColor(dayColor)
+                    .font(.system(size: 30))
             }
                 
             }.tabItem{
@@ -98,6 +108,9 @@ struct ContentView: View {
                     Text("\(city)")
                         .font(.system(size: 40))
                         .foregroundColor(dayColor)
+                Text("\(date)")
+                    .font(.system(size: 30))
+                    .foregroundColor(dayColor)
                     Text("\(description)")
                         .foregroundColor(dayColor)
                         .font(.system(size: 30))
@@ -112,6 +125,9 @@ struct ContentView: View {
                     Text("Feels like: \(self.feelsLike)°")
                         .foregroundColor(dayColor)
                         .font(.system(size: 30))
+                Text("Humidity: \(self.humidity)%")
+                    .foregroundColor(dayColor)
+                    .font(.system(size: 30))
                     
             }
             }.tabItem{
@@ -132,18 +148,15 @@ struct ContentView: View {
         
         let url = defaultUrl + city
          var temp = 0
-         var windSpeed = 0
          var humidity = 0
          var weatherDescription = ""
          var feelsLike = 0
          var isDay = true
-         var pressure = 0
          var date = ""
-         var code = 123
          var icon = ""
         
         
-        var newCity = city.replacingOccurrences(of: "%20", with: " ")
+        let newCity = city.replacingOccurrences(of: "%20", with: " ")
         self.city = newCity
         
         AF.request(url).responseData{ (data) in
@@ -158,13 +171,15 @@ struct ContentView: View {
                 temp = current["temperature"].intValue
                 self.temp = temp
                 weatherDescription = current["weather_descriptions"][0].stringValue
-                date = json["location"]["localtime"].stringValue
-            
-                windSpeed = current["wind_speed"].intValue
+                let adate = json["location"]["localtime"].stringValue
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateFormat = "EEEE, MMM d"
+                let dateForm = dateFormatter.date(from: adate) ?? Date()
+                date = dateFormatter.string(from: dateForm)
+                
+                
                 humidity = current["humidity"].intValue
                 feelsLike = current["feelslike"].intValue
-                pressure = current["pressure"].intValue
-                code = current["weather_code"].intValue
                 icon = current["weather_icons"][0].stringValue
                 
                 
@@ -177,14 +192,13 @@ struct ContentView: View {
                 }
                 
                 self.description = weatherDescription
-                self.presure = pressure
                 self.feelsLike = feelsLike
-                self.weatherCode = code
                 self.date = date
                 self.currentIcon = icon
                 self.isDay = isDay
                 self.gradient = getGradientWithDay(isDay: isDay)
                 self.dayColor = isDay == true ? Color.white : Color.blue
+                self.humidity = humidity
             }
         }
     }

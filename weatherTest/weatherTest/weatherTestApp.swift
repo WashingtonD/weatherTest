@@ -27,7 +27,7 @@ func getGradientWithDay(isDay: Bool) -> LinearGradient
     else{
         let customNightColor = Color("CustomNightColor")
         let customNightColorSecondary = Color("CustomNightColorSecondary")
-        var gradient = Gradient(colors:[customNightColor,customNightColorSecondary])
+        let gradient = Gradient(colors:[customNightColor,customNightColorSecondary])
         return LinearGradient(gradient: gradient, startPoint: .top, endPoint: .bottom)
     }
     
