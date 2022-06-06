@@ -17,53 +17,41 @@ struct weatherTestApp: App {
 }
 
 
-struct Query: Decodable{
+
+func getGradientWithDay(isDay: Bool) -> LinearGradient
+{
+    if(isDay)
+    {
+        return LinearGradient(gradient: Gradient(colors: [Color.blue,Color.orange]), startPoint: .top, endPoint: .bottom)
+    }
+    else{
+        let customNightColor = Color("CustomNightColor")
+        let customNightColorSecondary = Color("CustomNightColorSecondary")
+        var gradient = Gradient(colors:[customNightColor,customNightColorSecondary])
+        return LinearGradient(gradient: gradient, startPoint: .top, endPoint: .bottom)
+    }
     
-    let type: String?
-    let query: String?
-    let unit: String?
-    let lang: String?
 }
 
-struct Place: Decodable{
-    
-    let country: String?
-    let region: String?
-    let name: String?
-    let latitude: String?
-    let longitude: String?
-    let timezone_id: String?
-    let time: String?
-    let time_epoch: Int?
-    let utc_offset: String?
-}
-
-struct Statte: Decodable{
-    
-    let temp: Int?
-    let time_of_observation: Int?
-    let weather_icons: [String?]
-    let weather_code: Int?
-    let descriptions: [String?]
-    let wind_speed: Int?
-    let wind_degree: Int?
-    let wind_direction: String?
-    let humidity: Int?
-    let pressure: Int?
-    let precip: Double?
-    let uv_index: Int?
-    let visibility: Int?
-    let feeling: Int?
-    let cloudCover: Int?
-}
-
-
-struct Forecast: Decodable{
-    
-    let query: Query?
-    let place: Place?
-    let state: Statte?
-}
-
-
-
+   func getAdvancedGradient(isDay: Bool) -> CAGradientLayer{
+       let gradient = CAGradientLayer()
+       gradient.type = .axial
+       if(isDay)
+       {
+           gradient.colors = [
+               UIColor.red.cgColor,
+               UIColor.purple.cgColor,
+               UIColor.cyan.cgColor]
+           gradient.locations = [0,0.25,1]
+       }
+       else{
+           let color = UIColor(red: 0.00, green: 0.20, blue: 0.40,alpha: 1.00)
+           let colorSecondary = UIColor(red: 0.18, green: 0.36, blue: 0.52, alpha: 0.90)
+           gradient.colors = [
+               color.cgColor,
+               colorSecondary.cgColor
+           ]
+           gradient.locations = [0,1]
+       }
+       return gradient
+   }

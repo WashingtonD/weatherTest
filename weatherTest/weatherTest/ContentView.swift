@@ -32,97 +32,101 @@ struct ContentView: View {
         2: "New%20York",
         3: "Lodz"
     ]
+    @State var gradient = LinearGradient(gradient: Gradient(colors: [Color.white]), startPoint: .top, endPoint: .bottom)
+    @State var dayColor = Color.white
     
     var defaultUrl = "http://api.weatherstack.com/current?access_key=c44ccd5231093d11c36e5e302329beb7&query="
     
     
     var body: some View {
         TabView(selection: $selectedTab){
-        VStack{
+            ZStack
+            {
+             gradient
+             VStack{
                 Text("\(city)")
                     .font(.system(size: 40))
-                    .foregroundColor(/*@START_MENU_TOKEN@*/.blue/*@END_MENU_TOKEN@*/)
+                    .foregroundColor(dayColor)
                 Text("\(description)")
-                    .foregroundColor(/*@START_MENU_TOKEN@*/.blue/*@END_MENU_TOKEN@*/)
+                    .foregroundColor(dayColor)
                     .font(.system(size: 30))
                     .padding(.bottom,20)
             AnimatedImage(url: URL(string: currentIcon)).resizable()
                 .frame(width: 75, height: 75)
                 .clipShape(Circle())
                 .shadow(radius: 15)
-                Text("\(self.temp)°")
-                    .foregroundColor(.blue)
+                Label("\(self.temp)°",systemImage: "thermometer")
+                    .foregroundColor(dayColor)
                     .font(.system(size: 65))
                 Text("Feels like: \(self.feelsLike)°")
-                    .foregroundColor(/*@START_MENU_TOKEN@*/.blue/*@END_MENU_TOKEN@*/)
+                    .foregroundColor(dayColor)
                     .font(.system(size: 30))
                 
-            
+        }
         }.tabItem{
             Image(systemName: "circle.fill")
-           // background(Color.green)
         }.tag(1)
+            ZStack{
+                gradient
             VStack{
                     Text("\(city)")
                         .font(.system(size: 40))
-                        .foregroundColor(/*@START_MENU_TOKEN@*/.blue/*@END_MENU_TOKEN@*/)
+                        .foregroundColor(dayColor)
                     Text("\(description)")
-                        .foregroundColor(/*@START_MENU_TOKEN@*/.blue/*@END_MENU_TOKEN@*/)
+                        .foregroundColor(dayColor)
                         .font(.system(size: 30))
                         .padding(.bottom,20)
                 AnimatedImage(url: URL(string: currentIcon)).resizable()
                     .frame(width: 75, height: 75)
                     .clipShape(Circle())
                     .shadow(radius: 15)
-                    Text("\(self.temp)°")
-                        .foregroundColor(.blue)
-                        .font(.system(size: 65))
+                Label("\(self.temp)°",systemImage: "thermometer")
+                    .foregroundColor(dayColor)
+                    .font(.system(size: 65))
                     Text("Feels like: \(self.feelsLike)°")
-                        .foregroundColor(/*@START_MENU_TOKEN@*/.blue/*@END_MENU_TOKEN@*/)
+                        .foregroundColor(dayColor)
                         .font(.system(size: 30))
-                    
+            }
                 
             }.tabItem{
                 Image(systemName: "circle.fill")
             }.tag(2)
+            
+            ZStack{
+            gradient
             VStack{
                     Text("\(city)")
                         .font(.system(size: 40))
-                        .foregroundColor(/*@START_MENU_TOKEN@*/.blue/*@END_MENU_TOKEN@*/)
+                        .foregroundColor(dayColor)
                     Text("\(description)")
-                        .foregroundColor(/*@START_MENU_TOKEN@*/.blue/*@END_MENU_TOKEN@*/)
+                        .foregroundColor(dayColor)
                         .font(.system(size: 30))
                         .padding(.bottom,20)
                 AnimatedImage(url: URL(string: currentIcon)).resizable()
                     .frame(width: 75, height: 75)
                     .clipShape(Circle())
                     .shadow(radius: 15)
-                    Text("\(self.temp)°")
-                        .foregroundColor(.blue)
-                        .font(.system(size: 65))
+                Label("\(self.temp)°",systemImage: "thermometer")
+                    .foregroundColor(dayColor)
+                    .font(.system(size: 65))
                     Text("Feels like: \(self.feelsLike)°")
-                        .foregroundColor(/*@START_MENU_TOKEN@*/.blue/*@END_MENU_TOKEN@*/)
+                        .foregroundColor(dayColor)
                         .font(.system(size: 30))
                     
-                
+            }
             }.tabItem{
                 Image(systemName: "circle.fill")
             }.tag(3)
         }.onChange(of: selectedTab, perform: { item in
             self.getForecastData(city: cityAndTab[item]!)
-            if(isDay){
-               background(Color.white)
-            }else{
-                background(Color.gray
-                            .grayscale(1/3))
-            }
+            
         })
         .onAppear(){
             self.getForecastData(city: "Paris")
         }
+        
 
     }
-
 
     func getForecastData(city: String){
         
@@ -179,18 +183,10 @@ struct ContentView: View {
                 self.date = date
                 self.currentIcon = icon
                 self.isDay = isDay
-            }
-            else
-            {
-                print("FAALSE")
+                self.gradient = getGradientWithDay(isDay: isDay)
+                self.dayColor = isDay == true ? Color.white : Color.blue
             }
         }
-     
-        
-      
-        
-        
-        
     }
 }
 
@@ -202,18 +198,4 @@ struct ContentView_Previews: PreviewProvider {
 
 
 
-struct WeatherModel {
-    
-    var query: String
-    var temp: Int
-    var windSpeed: Int
-    var humidity: Int
-    var icon: String
-    var weatherDescription: String
-    var feelsLike: Int
-    var isDay: Bool
-    var pressure: Int
-    var date: String
-    
-}
 
